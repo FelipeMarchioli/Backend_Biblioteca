@@ -12,6 +12,7 @@ class ControllerUser {
   async createUser (req, res) {
     const user = req.body
 
+    //Using a validator service to validate e-mail
     const validEmail = validator.isValidEmail(user.email)
     if (validEmail.error) return res.status(400).send(validEmail)
 

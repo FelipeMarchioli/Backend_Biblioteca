@@ -10,6 +10,7 @@ class ControllerBook {
     }
 
     async getBook (req, res) {
+        //Get a param sent by url request
         headquarter = req.params("headquarters");
 
         let books  = await Book.find();

@@ -11,6 +11,7 @@ class UserRepository extends baseRepo {
         }
     }
 
+    // Using methods created on base repository
     async Find (id) {
         return super.Find(id, User)
     }

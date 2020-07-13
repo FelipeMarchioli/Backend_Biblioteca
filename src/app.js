@@ -10,6 +10,7 @@ const userRouter = require('./router/user')
 const indexRouter = require('./router/index')
 const UserRepo = require('./model/user')
 
+//Create a token JWT for user
 const authMiddleware = async (req, res, next) => {
   const [, token] = req.headers.authorization.split(' ')
 
@@ -59,7 +60,9 @@ class App {
   }
 
   routes () {
+    //Open route
     this.express.use(indexRouter)
+    //Secure route with JWT
     this.express.use('/api/v1/book', authMiddleware, bookRouter)
     this.express.use('/api/v1/user', authMiddleware, userRouter)
   }
