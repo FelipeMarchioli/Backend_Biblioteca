@@ -3,7 +3,31 @@ const bodyParser = require('body-parser')
 const env = require('dotenv')
 const cors = require('cors')
 const mongoose = require('mongoose')
+const jwt = require('jsonwebtoken')
 
+const bookRouter = require('./router/book')
+const userRouter = require('./router/user')
+const indexRouter = require('./router/index')
+const UserRepo = require('./model/user')
+
+const authMiddleware = async (req, res, next) => {
+  const [, token] = req.headers.authorization.split(' ')
+
+  try {
+    const payload = await jwt.verify(token, process.env.JWT_SECRET)
+
+    const user = await UserRepo.Find(payload.userId)
+    if (!user) {
+      return res.send(401)
+    }
+
+    req.auth = user
+
+    next()
+  } catch (error) {
+    res.send(401, error)
+  }
+}
 class App {
   constructor () {
     this.express = express()
@@ -36,6 +60,8 @@ class App {
 
   routes () {
     this.express.use(indexRouter)
+    this.express.use('/api/v1/book', authMiddleware, bookRouter)
+    this.express.use('/api/v1/user', authMiddleware, userRouter)
   }
 }
 
